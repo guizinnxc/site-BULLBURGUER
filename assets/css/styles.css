@@ -974,9 +974,7 @@ a:hover { color: var(--ambar); }
   padding-block: clamp(30px, 4vw, 44px);
 }
 
-.rodape-marca { display: flex; align-items: center; gap: 13px; }
-.rodape-marca img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; flex: 0 0 auto; }
-.rodape-marca-texto { min-width: 0; }
+.rodape-marca { min-width: 0; }
 .rodape-marca strong { display: block; font-size: 1.5rem; }
 .rodape-marca span { display: block; color: var(--rodape-fraco); font-size: .88rem; margin-top: 2px; }
 
