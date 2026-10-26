@@ -957,32 +957,67 @@ a:hover { color: var(--ambar); }
 }
 .info-card strong { color: var(--texto); font-weight: 600; }
 
-.rodape { background: var(--carvao); border-top: 1px solid var(--linha); }
+.rodape {
+  background: var(--carvao); border-top: 1px solid var(--linha);
+  /* segundo nível de cinza do rodapé. --texto-fraco daria 3,81:1 sobre o
+     carvão, abaixo do mínimo de 4,5:1; este dá 4,98:1 e continua discreto.
+     Fica no rodapé de propósito, para não mexer no token global. */
+  --rodape-fraco: #8d8279;
+}
+/* marca | onde estamos | contato — a do meio é mais larga porque carrega o
+   endereço inteiro, que é a linha mais comprida do rodapé. */
 .rodape-inner {
-  display: flex; flex-wrap: wrap; gap: 22px;
-  justify-content: space-between; align-items: center;
-  padding-block: clamp(28px, 4vw, 40px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(26px, 4vw, 54px);
+  align-items: start;
+  padding-block: clamp(30px, 4vw, 44px);
 }
+
 .rodape-marca { display: flex; align-items: center; gap: 13px; }
-.rodape-marca img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
-.rodape-marca strong {
-  display: block; font-size: 1.5rem;
-}
-.rodape-marca span { color: var(--texto-fraco); font-size: .88rem; }
+.rodape-marca img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; flex: 0 0 auto; }
+.rodape-marca-texto { min-width: 0; }
+.rodape-marca strong { display: block; font-size: 1.5rem; }
+.rodape-marca span { display: block; color: var(--rodape-fraco); font-size: .88rem; margin-top: 2px; }
 
-.rodape-links { display: flex; flex-wrap: wrap; gap: 9px; }
-.rodape-links a {
+/* mesmo título dos cartões de Informações, para o rodapé não inventar um
+   terceiro estilo de cabeçalho pequeno */
+.rodape-tit {
+  font-size: .7rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--brasa-clara); font-weight: 700; font-family: var(--texto-ff);
+  margin-bottom: 10px;
+}
+
+.rodape-local address, .rodape-local p {
+  color: var(--texto-suave); font-size: .89rem; line-height: 1.6;
+  font-style: normal; overflow-wrap: anywhere;
+}
+.rodape-local .rodape-ref { display: block; color: var(--rodape-fraco); }
+.rodape-local p { margin-top: 9px; }
+
+.rodape-redes { display: flex; flex-wrap: wrap; gap: 2px 22px; }
+.rodape-redes a {
   display: inline-flex; align-items: center; gap: 9px;
-  min-height: var(--toque); padding: 10px 18px;
-  border: 1px solid var(--linha); border-radius: 999px;
-  color: var(--texto); font-weight: 500; font-size: .92rem;
-  transition: border-color var(--t), background var(--t);
+  min-height: var(--toque); padding-block: 8px;
+  color: var(--texto-suave); font-size: .89rem;
+  transition: color var(--t);
 }
-.rodape-links a:hover { border-color: var(--brasa); background: rgba(232, 96, 28, .08); color: var(--texto); }
-.rodape-links svg { width: 17px; height: 17px; color: var(--brasa-clara); flex: 0 0 auto; }
+.rodape-redes a:hover { color: var(--texto); }
+.rodape-redes svg { width: 18px; height: 18px; color: var(--brasa-clara); flex: 0 0 auto; transition: color var(--t); }
+.rodape-redes a:hover svg { color: var(--brasa); }
 
-.rodape-base { border-top: 1px solid var(--linha); padding-block: 18px 24px; }
-.rodape-base p { color: var(--texto-fraco); font-size: .82rem; line-height: 1.65; }
+.rodape-base { border-top: 1px solid var(--linha); padding-block: 16px 22px; text-align: center; }
+.rodape-base p { color: var(--rodape-fraco); font-size: .82rem; line-height: 1.65; }
+.rodape-base .rodape-copy { color: var(--texto-suave); }
+.rodape-nota { margin-top: 3px; }
+
+/* no celular as três colunas viram uma pilha, na ordem do HTML */
+@media (max-width: 900px) {
+  .rodape-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+  }
+}
 
 /* ==========================================================================
    BARRA INFERIOR (CELULAR)

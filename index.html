@@ -332,19 +332,34 @@
 </main>
 
 <!-- ======================= RODAPÉ ======================= -->
+<!-- Três colunas: marca, onde estamos, contato. O texto abaixo é só a versão
+     estática; quem manda nos dados é dados.js, que o app.js escreve por cima. -->
 <footer class="rodape">
   <div class="wrap rodape-inner">
+
     <div class="rodape-marca">
       <img src="assets/img/logo-mark.png" alt="" width="52" height="52" loading="lazy" decoding="async">
-      <div>
+      <div class="rodape-marca-texto">
         <strong class="letreiro">Bullburger</strong>
         <span id="rodape-slogan">Blends, fogo e atitude na brasa</span>
       </div>
     </div>
-    <div class="rodape-links" id="rodape-links"></div>
+
+    <div class="rodape-local">
+      <h2 class="rodape-tit">Onde estamos</h2>
+      <address id="rodape-endereco">Av. Osório Duque Estrada, nº 281 — Centro, Paty do Alferes/RJ<span class="rodape-ref">Em frente à Casa das Pedras</span></address>
+      <p id="rodape-horario">De terça a domingo, a partir das 19h</p>
+    </div>
+
+    <div class="rodape-contato">
+      <h2 class="rodape-tit">Siga a Bullburger</h2>
+      <ul class="rodape-redes" id="rodape-links"></ul>
+    </div>
+
   </div>
   <div class="wrap rodape-base">
-    <p id="rodape-legal"></p>
+    <p class="rodape-copy" id="rodape-copy">© 2026 Bullburger. Todos os direitos reservados.</p>
+    <p class="rodape-nota">Os pedidos feitos aqui são encaminhados para o nosso WhatsApp e confirmados por lá.</p>
   </div>
 </footer>
 

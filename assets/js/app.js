@@ -1426,16 +1426,22 @@
     zap.href = 'https://wa.me/' + numeroWhats();
 
     $('#rodape-slogan').textContent = CFG.marca.slogan;
-    $('#rodape-links').innerHTML =
-      '<a href="https://wa.me/' + escapar(numeroWhats()) + '" target="_blank" rel="noopener">' +
-      icoWhats + 'WhatsApp ' + escapar(c.telefoneExibicao) + '</a>' +
-      '<a href="' + escapar(c.instagramUrl) + '" target="_blank" rel="noopener">' +
-      icoInsta + '@' + escapar(c.instagram) + '</a>';
+    $('#rodape-endereco').innerHTML =
+      escapar(c.endereco) + '<span class="rodape-ref">' + escapar(c.referencia) + '</span>';
+    $('#rodape-horario').textContent = CFG.funcionamento.texto;
 
-    $('#rodape-legal').innerHTML =
-      escapar(c.endereco) + ' · ' + escapar(c.referencia) + '<br>' +
-      escapar(CFG.funcionamento.texto) +
-      ' · Os pedidos feitos aqui são encaminhados para o nosso WhatsApp e confirmados por lá.';
+    // o ícone já diz qual é o canal; o texto fica só com o dado. O nome do
+    // canal entra no aria-label, senão o leitor de tela anuncia um número solto.
+    $('#rodape-links').innerHTML =
+      '<li><a href="https://wa.me/' + escapar(numeroWhats()) + '" target="_blank" rel="noopener" ' +
+      'aria-label="WhatsApp ' + escapar(c.telefoneExibicao) + '">' +
+      icoWhats + '<span>' + escapar(c.telefoneExibicao) + '</span></a></li>' +
+      '<li><a href="' + escapar(c.instagramUrl) + '" target="_blank" rel="noopener" ' +
+      'aria-label="Instagram @' + escapar(c.instagram) + '">' +
+      icoInsta + '<span>@' + escapar(c.instagram) + '</span></a></li>';
+
+    $('#rodape-copy').textContent =
+      '© ' + new Date().getFullYear() + ' ' + CFG.marca.nome + '. Todos os direitos reservados.';
   }
 
   /* ================================================================== */
