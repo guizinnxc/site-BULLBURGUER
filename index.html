@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<!-- O site não tem script embutido, nem atributo style, nem url() no CSS,
+     então a política pode ser estrita. Vem antes de qualquer link ou script
+     para já valer no primeiro recurso carregado.
+     frame-ancestors só funciona em cabeçalho HTTP — ver README. -->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self';
+  style-src 'self' https://fonts.googleapis.com;
+  font-src https://fonts.gstatic.com;
+  img-src 'self';
+  connect-src 'none';
+  object-src 'none';
+  base-uri 'none';
+  form-action 'none';
+  upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Bullburger — Na Brasa | Cardápio e pedidos em Paty do Alferes</title>
+<meta name="description" content="Cardápio digital da Bullburger — Na Brasa, em Paty do Alferes/RJ. Monte seu pedido e envie direto pelo WhatsApp.">
+<meta name="theme-color" content="#0c0b0a">
+<link rel="icon" href="assets/img/logo-mark.png">
+<link rel="apple-touch-icon" href="assets/img/logo-mark.png">
+
+<meta property="og:title" content="Bullburger — Na Brasa">
+<meta property="og:description" content="Blends, fogo e atitude na brasa. Cardápio e pedidos pelo WhatsApp.">
+<meta property="og:image" content="assets/img/logo.jpg">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Antonio:wght@500;600;700&family=Archivo:wght@400;500;600;700&family=Caveat:wght@600&family=Lobster&display=swap" rel="stylesheet">
+<!-- As duas imagens da abertura: baixam cedo, antes mesmo do JS montar a seção.
+     Se trocar a foto do lanche em dados.js, troque o caminho aqui também. -->
+<link rel="preload" as="image" href="assets/img/brasa.jpg" fetchpriority="high">
+<link rel="preload" as="image" href="assets/img/hero-lanche.webp" fetchpriority="high">
+<!-- O ?v= no fim força o navegador a baixar a versão nova.
+     SEMPRE que mexer em dados.js (preços, itens), suba o número nos três
+     endereços abaixo — senão o cliente continua vendo o cardápio antigo
+     que ficou guardado no celular dele. -->
+<link rel="stylesheet" href="assets/css/styles.css?v=16">
+</head>
+
+<body>
+<a class="skip-link" href="#cardapio">Pular para o cardápio</a>
+
+<!-- ======================= AVISO DO TOPO ======================= -->
+<a class="faixa-topo" href="#cardapio">
+  <strong>Fome de coisa boa?</strong>
+  <span id="faixa-horario">De terça a domingo, a partir das 19h</span>
+  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path d="M7 7h10v10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</a>
+
+<!-- ======================= CABEÇALHO ======================= -->
+<header class="cabecalho" id="topo">
+  <div class="wrap cabecalho-inner">
+    <!-- Marca em letreiro, sem o emblema. O emblema continua no rodapé e no
+         ícone da aba, onde funciona melhor em tamanho pequeno. -->
+    <a class="marca" href="#topo" aria-label="Bullburger — Na Brasa, início">
+      <span class="marca-texto">
+        <strong class="letreiro">Bullburger</strong>
+        <small>Na Brasa</small>
+      </span>
+    </a>
+
+    <nav class="nav-desktop" aria-label="Navegação principal">
+      <a href="#cardapio">Cardápio</a>
+      <a href="#como-pedir">Como pedir</a>
+      <a href="#informacoes">Informações</a>
+    </nav>
+
+    <div class="cabecalho-acoes">
+      <a class="btn btn-primario btn-pedir" href="#cardapio">Fazer meu pedido</a>
+
+      <button class="btn-icone btn-carrinho" id="btn-carrinho" type="button"
+              aria-label="Abrir o carrinho, vazio" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M3.2 4.5h2L7.6 15a1.8 1.8 0 0 0 1.8 1.4h7.3a1.8 1.8 0 0 0 1.76-1.4L20 8.2H6.1"
+                fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="10" cy="19.6" r="1.35" fill="currentColor"/>
+          <circle cx="16.6" cy="19.6" r="1.35" fill="currentColor"/>
+        </svg>
+        <span class="contador" id="contador-carrinho" hidden>0</span>
+      </button>
+
+      <button class="btn-icone btn-menu" id="btn-menu" type="button"
+              aria-label="Abrir o menu" aria-expanded="false" aria-controls="nav-movel">
+        <span class="hamburguer" aria-hidden="true"><i></i><i></i><i></i></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- menu do celular -->
+<div class="nav-movel" id="nav-movel" hidden>
+  <div class="nav-movel-fundo" data-fechar-menu></div>
+  <nav class="nav-movel-painel" aria-label="Navegação">
+    <div class="nav-movel-cab">
+      <span>Menu</span>
+      <button type="button" class="btn-fechar" data-fechar-menu aria-label="Fechar o menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="m7 7 10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <a href="#cardapio">Cardápio</a>
+    <a href="#como-pedir">Como pedir</a>
+    <a href="#informacoes">Informações</a>
+    <a class="nav-movel-zap" href="https://wa.me/5524981142237" target="_blank" rel="noopener">
+      Falar no WhatsApp
+    </a>
+  </nav>
+</div>
+
+<main id="conteudo">
+
+  <!-- ======================= ABERTURA ======================= -->
+  <section class="abertura">
+    <div class="abertura-fundo" aria-hidden="true">
+      <img src="assets/img/brasa.jpg" alt="" width="1600" height="900" fetchpriority="high" decoding="async">
+      <span class="abertura-veu"></span>
+    </div>
+
+    <div class="wrap abertura-inner">
+      <div class="abertura-grade">
+        <div class="abertura-texto">
+          <p class="sobrancelha marcada"><i aria-hidden="true">✳</i> Paty do Alferes · RJ</p>
+
+          <h1 class="abertura-titulo">
+            Fogo na brasa.<br>
+            Atitude em cada
+            <span class="palavra-fogo">mordida.<svg class="risco" viewBox="0 0 220 16" aria-hidden="true"
+              focusable="false" preserveAspectRatio="none">
+              <path d="M3 11C44 5 92 4 134 7c26 2 56 2 83-2" fill="none" stroke="currentColor"
+                    stroke-width="4" stroke-linecap="round"/>
+            </svg></span>
+          </h1>
+
+          <p class="abertura-lead">
+            Blends grelhados na brasa, pão de brioche e doze artesanais que não
+            se repetem. Monte o seu lanche e mande o pedido direto pelo nosso
+            WhatsApp.
+          </p>
+
+          <div class="abertura-acoes">
+            <a class="btn btn-primario btn-grande btn-seta" href="#cardapio">
+              Ver cardápio
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M7 7h10v10M17 7 7 17" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a class="elo-texto" href="#como-pedir">
+              Como funciona
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M12 5v13M6 12.5 12 19l6-6.5" fill="none" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="abertura-palco">
+          <!-- selo circular com o slogan real da casa -->
+          <div class="selo-redondo" aria-hidden="true">
+            <svg viewBox="0 0 200 200">
+              <defs>
+                <path id="aro" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/>
+              </defs>
+              <text><textPath href="#aro" startOffset="0">
+                BLENDS · FOGO · ATITUDE · NA BRASA ·&nbsp;
+              </textPath></text>
+            </svg>
+            <span class="selo-centro">Na<br>brasa</span>
+          </div>
+
+          <!-- anotação à mão apontando para o lanche -->
+          <p class="recado" aria-hidden="true">
+            Pode chegar com fome.
+            <svg viewBox="0 0 90 70" focusable="false">
+              <path d="M6 6c22 2 40 14 52 32" fill="none" stroke="currentColor"
+                    stroke-width="3" stroke-linecap="round"/>
+              <path d="M46 42l14 2 -3 -14" fill="none" stroke="currentColor"
+                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </p>
+
+          <!-- Preenchido por app.js a partir de config.marca.fotoDestaque. -->
+          <figure class="abertura-foto" id="abertura-foto" hidden></figure>
+        </div>
+      </div>
+
+      <dl class="abertura-meta">
+        <div>
+          <dt>Funcionamento</dt>
+          <dd id="meta-funcionamento">De terça a domingo, a partir das 19h</dd>
+        </div>
+        <div>
+          <dt>Onde</dt>
+          <dd id="meta-endereco">Av. Osório Duque Estrada, 281 — Centro</dd>
+        </div>
+        <div>
+          <dt>Pedidos</dt>
+          <dd><a id="meta-whats" href="https://wa.me/5524981142237" target="_blank" rel="noopener">(24) 98114-2237</a></dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ======================= CARDÁPIO ======================= -->
+  <section class="secao" id="cardapio">
+    <div class="wrap">
+      <header class="secao-topo">
+        <p class="sobrancelha">O cardápio</p>
+        <h2>Escolha o seu hambúrguer</h2>
+        <p class="secao-lead">
+          Nos X, o preço muda conforme a carne. Nos artesanais, cada Bull tem
+          uma ideia própria. Toque no item para montar do seu jeito.
+        </p>
+      </header>
+    </div>
+
+    <!-- Vitrine: só aparece quando há pelo menos dois itens marcados com
+         destaque: true E com foto cadastrada. Montada por app.js. -->
+    <section class="vitrine" id="vitrine" hidden aria-label="Destaques do cardápio">
+      <div class="wrap">
+        <div class="vitrine-palco">
+          <div class="vitrine-trilho" id="vitrine-trilho"></div>
+
+          <button type="button" class="vitrine-seta vitrine-ant" id="vitrine-ant"
+                  aria-label="Destaque anterior">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M14.5 5 8 12l6.5 7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button type="button" class="vitrine-seta vitrine-prox" id="vitrine-prox"
+                  aria-label="Próximo destaque">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M9.5 5 16 12l-6.5 7" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <p class="vitrine-conta" id="vitrine-conta" aria-hidden="true"></p>
+        </div>
+
+        <div class="vitrine-miniaturas" id="vitrine-miniaturas" role="tablist"
+             aria-label="Escolher destaque"></div>
+      </div>
+    </section>
+
+    <div class="ferramentas" id="ferramentas">
+      <div class="wrap ferramentas-inner">
+        <div class="busca">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="11" cy="11" r="6.4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <path d="m15.8 15.8 4.4 4.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <label class="sr-only" for="campo-busca">Buscar no cardápio</label>
+          <input id="campo-busca" type="search" inputmode="search" placeholder="Buscar no cardápio…"
+                 autocomplete="off" enterkeyhint="search">
+          <button type="button" class="busca-limpar" id="limpar-busca" hidden aria-label="Limpar busca">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="m7 7 10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="filtros" id="filtros" role="tablist" aria-label="Filtrar por categoria"></div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div id="lista-cardapio" class="cardapio"></div>
+      <p class="estado-vazio" id="cardapio-vazio" hidden>
+        <strong>Nada encontrado.</strong>
+        <span>Tente outra palavra ou volte para "Tudo".</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ======================= COMO PEDIR ======================= -->
+  <section class="secao secao-alt" id="como-pedir">
+    <div class="wrap">
+      <header class="secao-topo">
+        <p class="sobrancelha">Como pedir</p>
+        <h2>Três passos até a brasa</h2>
+      </header>
+
+      <ol class="passos">
+        <li>
+          <span class="passo-num" aria-hidden="true">01</span>
+          <h3>Monte o pedido</h3>
+          <p>Escolha os lanches, a carne, os adicionais e o que quiser tirar. Tudo vai para o carrinho.</p>
+        </li>
+        <li>
+          <span class="passo-num" aria-hidden="true">02</span>
+          <h3>Informe seus dados</h3>
+          <p>Nome, entrega ou retirada e, se for entrega, o endereço com um ponto de referência.</p>
+        </li>
+        <li>
+          <span class="passo-num" aria-hidden="true">03</span>
+          <h3>Envie pelo WhatsApp</h3>
+          <p>O site abre o WhatsApp com o pedido escrito. <strong>Você toca em enviar</strong> e espera a nossa confirmação.</p>
+        </li>
+      </ol>
+
+      <p class="aviso">
+        <strong>Importante:</strong> este site não processa pagamento nem confirma pedido automaticamente.
+        Abrir o WhatsApp não significa que o pedido foi recebido, aceito ou pago — a confirmação vem da nossa equipe na conversa.
+      </p>
+    </div>
+  </section>
+
+  <!-- ======================= INFORMAÇÕES ======================= -->
+  <section class="secao" id="informacoes">
+    <div class="wrap">
+      <header class="secao-topo">
+        <p class="sobrancelha">Informações</p>
+        <h2>Onde, quando e como</h2>
+      </header>
+      <div class="infos" id="bloco-informacoes"></div>
+    </div>
+  </section>
+</main>
+
+<!-- ======================= RODAPÉ ======================= -->
+<footer class="rodape">
+  <div class="wrap rodape-inner">
+    <div class="rodape-marca">
+      <img src="assets/img/logo-mark.png" alt="" width="52" height="52" loading="lazy" decoding="async">
+      <div>
+        <strong class="letreiro">Bullburger</strong>
+        <span id="rodape-slogan">Blends, fogo e atitude na brasa</span>
+      </div>
+    </div>
+    <div class="rodape-links" id="rodape-links"></div>
+  </div>
+  <div class="wrap rodape-base">
+    <p id="rodape-legal"></p>
+  </div>
+</footer>
+
+<!-- ======================= BARRA INFERIOR (CELULAR) ======================= -->
+<div class="barra" id="barra-mobile" hidden>
+  <div class="barra-info">
+    <strong id="barra-qtd">0 itens</strong>
+    <span id="barra-valor">R$ 0,00</span>
+  </div>
+  <button type="button" class="btn btn-primario" id="barra-ver-pedido">Ver pedido</button>
+</div>
+
+<!-- ======================= MODAL DE PRODUTO ======================= -->
+<div class="camada" id="overlay-produto" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="produto-titulo" id="modal-produto">
+    <button type="button" class="btn-fechar" id="fechar-produto" aria-label="Fechar">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="m7 7 10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="modal-corpo" id="produto-corpo"></div>
+    <div class="modal-pe">
+      <div class="qtd" role="group" aria-label="Quantidade">
+        <button type="button" id="qtd-menos" aria-label="Diminuir quantidade">&minus;</button>
+        <output id="qtd-valor" aria-live="polite">1</output>
+        <button type="button" id="qtd-mais" aria-label="Aumentar quantidade">+</button>
+      </div>
+      <button type="button" class="btn btn-primario btn-add" id="btn-adicionar">
+        <span>Adicionar ao pedido</span>
+        <strong id="preco-modal">R$ 0,00</strong>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= CARRINHO / FINALIZAÇÃO ======================= -->
+<div class="camada camada-gaveta" id="overlay-carrinho" hidden>
+  <aside class="gaveta" role="dialog" aria-modal="true" aria-labelledby="gaveta-titulo" id="gaveta">
+    <header class="gaveta-topo">
+      <button type="button" class="btn-voltar" id="gaveta-voltar" hidden aria-label="Voltar">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M14.5 5 8 12l6.5 7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <h2 id="gaveta-titulo">Seu pedido</h2>
+      <button type="button" class="btn-fechar" id="fechar-carrinho" aria-label="Fechar">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="m7 7 10 10M17 7 7 17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </header>
+    <div class="gaveta-corpo" id="gaveta-corpo"></div>
+    <footer class="gaveta-pe" id="gaveta-pe"></footer>
+  </aside>
+</div>
+
+<div class="aviso-flutuante" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="assets/js/dados.js?v=16"></script>
+<script src="assets/js/app.js?v=16"></script>
+</body>
+</html>
