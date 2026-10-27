@@ -1379,6 +1379,22 @@ body.travado .aviso-flutuante.aberto { transform: translateX(-50%) translateY(0)
   .abertura-foto.aguardando { max-width: 280px; }
 }
 
+/* No celular o lanche vinha com ~90% da largura: empurrava funcionamento e
+   endereço para fora da primeira tela e deixava a composição desequilibrada.
+   Quem encolhe é o PALCO, não só a figura — o selo e o recado são posicionados
+   por ele, então acompanham a foto em vez de se soltarem nos cantos. */
+@media (max-width: 767px) {
+  .abertura-palco {
+    width: clamp(240px, 80%, 300px);
+    max-width: 100%;          /* trava de segurança: nunca passa do contêiner */
+    margin-inline: auto;
+    margin-top: 12px;         /* o recado cabe aqui sem encostar nos botões */
+  }
+  /* o selo acompanha o novo tamanho: a 88px ele comia um terço do palco */
+  .selo-redondo { width: clamp(72px, 19%, 88px); top: -3%; right: -3%; }
+  .selo-redondo text { font-size: 19px; }
+}
+
 @media (max-width: 619px) {
   /* abertura mais curta: o cardápio precisa estar a um polegar de distância */
   .abertura { padding-block: 30px 34px; }
